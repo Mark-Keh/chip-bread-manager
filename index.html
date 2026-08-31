@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chips-bread-manager</title>
+    <link rel="stylesheet" href="chips.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1f2937">
+</head>
+<body>
+    <header class="header">
+        <div>
+            <h1>Chip & Bread Manager</h1>
+            <p>Manage your sales and customer credit</p>
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <!-- DASHBOARD -->
+
+        <section class="dashboard">
+
+    <div class="card">
+        <span>Today's Sales</span>
+        <h2 id="todaySales">₦0</h2>
+    </div>
+
+    <div class="card">
+        <span>Credit Given</span>
+        <h2 id="creditGiven">₦0</h2>
+    </div>
+
+    <div class="card">
+        <span>Payments Received</span>
+        <h2 id="paymentsReceived">₦0</h2>
+    </div>
+
+    <div class="card debt-card">
+        <span>Total Outstanding</span>
+        <h2 id="totalDebt">₦0</h2>
+    </div>
+
+</section>
+
+
+<!-- REPORT SUMMARY -->
+
+<section class="report-section">
+
+    <h2>Business Summary</h2>
+
+    <div class="report-grid">
+
+        <div class="report-box">
+            <span>Total Sales</span>
+            <strong id="totalSales">₦0</strong>
+        </div>
+
+        <div class="report-box">
+            <span>Total Payments</span>
+            <strong id="totalPayments">₦0</strong>
+        </div>
+
+        <div class="report-box">
+            <span>Customers</span>
+            <strong id="customerCount">0</strong>
+        </div>
+
+        <div class="report-box">
+            <span>Customers Owing</span>
+            <strong id="owingCustomers">0</strong>
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- QUICK ACTIONS -->
+
+        <section class="quick-actions">
+
+            <h2>Quick Actions</h2>
+
+            <div class="actions">
+
+                <button onclick="openCustomerForm()">
+                    + Add Customer
+                </button>
+
+                <button onclick="openCreditSaleForm()">
+    + Credit Sale
+</button>
+                <button onclick="openPaymentForm()">
+    + Record Payment
+</button>
+
+                <button onclick="showCustomers()">
+                    👥 Customers
+                </button>
+
+            </div>
+
+        </section>
+        <!-- CREDIT SALE -->
+
+<section class="form-section" id="creditSaleForm">
+
+    <h2>Record Credit Sale</h2>
+
+    <form onsubmit="addCreditSale(event)">
+
+        <label for="saleCustomer">
+            Customer
+        </label>
+
+        <select id="saleCustomer" required>
+            <option value="">
+                Select customer
+            </option>
+        </select>
+
+
+        <label for="saleProduct">
+            Product
+        </label>
+
+        <select
+            id="saleProduct"
+            onchange="updateSalePrice()"
+            required
+        >
+            <option value="">
+                Select product
+            </option>
+        </select>
+
+
+        <label for="saleQuantity">
+            Quantity
+        </label>
+
+        <input
+            type="number"
+            id="saleQuantity"
+            min="1"
+            value="1"
+            onchange="calculateSaleTotal()"
+            required
+        >
+
+
+        <label>
+            Unit Price
+        </label>
+
+        <input
+            type="text"
+            id="salePrice"
+            readonly
+            value="₦0"
+        >
+
+
+        <label>
+            Total
+        </label>
+
+        <input
+            type="text"
+            id="saleTotal"
+            readonly
+            value="₦0"
+        >
+
+
+        <label for="salePaid">
+            Amount Paid
+        </label>
+
+        <input
+            type="number"
+            id="salePaid"
+            min="0"
+            value="0"
+            onchange="calculateSaleBalance()"
+        >
+
+
+        <label>
+            Outstanding
+        </label>
+
+        <input
+            type="text"
+            id="saleBalance"
+            readonly
+            value="₦0"
+        >
+
+
+        <div class="form-buttons">
+
+            <button type="submit">
+                Save Sale
+            </button>
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="closeCreditSaleForm()"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+<!-- PAYMENT FORM -->
+
+<section class="form-section" id="paymentForm">
+
+    <h2>Record Payment</h2>
+
+    <form onsubmit="addPayment(event)">
+
+        <label for="paymentCustomer">
+            Customer
+        </label>
+
+        <select id="paymentCustomer" required>
+            <option value="">
+                Select customer
+            </option>
+        </select>
+
+
+        <label for="paymentAmount">
+            Amount Paid (₦)
+        </label>
+
+        <input
+            type="number"
+            id="paymentAmount"
+            min="1"
+            placeholder="Enter amount"
+            required
+        >
+
+
+        <label for="paymentNote">
+            Note (Optional)
+        </label>
+
+        <input
+            type="text"
+            id="paymentNote"
+            placeholder="e.g. Cash payment"
+        >
+
+
+        <div class="form-buttons">
+
+            <button type="submit">
+                Save Payment
+            </button>
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="closePaymentForm()"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+        <!-- PRODUCTS -->
+
+<section class="products-section">
+
+    <div class="section-header">
+        <h2>Products</h2>
+
+        <button onclick="openProductForm()">
+            + Add Product
+        </button>
+    </div>
+
+
+    <!-- PRODUCT FORM -->
+
+    <div class="product-form" id="productForm">
+
+        <form onsubmit="addProduct(event)">
+
+            <label for="productName">
+                Product Name
+            </label>
+
+            <input
+                type="text"
+                id="productName"
+                placeholder="e.g. Bread"
+                required
+            >
+
+
+            <label for="productPrice">
+                Selling Price (₦)
+            </label>
+
+            <input
+                type="number"
+                id="productPrice"
+                placeholder="e.g. 1000"
+                min="0"
+                required
+            >
+
+
+            <div class="form-buttons">
+
+                <button type="submit">
+                    Save Product
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeProductForm()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- PRODUCT LIST -->
+
+    <div id="productList">
+
+        <div class="empty-state">
+
+            <p>No products yet.</p>
+
+            <small>
+                Add your first product.
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+        <!-- CUSTOMER FORM -->
+
+        <section class="form-section" id="customerForm">
+
+            <h2>Add Customer</h2>
+
+            <form onsubmit="addCustomer(event)">
+
+                <label for="customerName">
+                    Customer Name
+                </label>
+
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter customer's name"
+                    required
+                >
+
+
+                <label for="customerPhone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="customerPhone"
+                    placeholder="08012345678"
+                >
+
+
+                <div class="form-buttons">
+
+                    <button type="submit">
+                        Save Customer
+                    </button>
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        onclick="closeCustomerForm()"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- CUSTOMERS -->
+
+        <section class="customers-section">
+
+            <h2>Customers</h2>
+
+            <div id="customerList">
+                <div class="empty-state">
+                    <p>No customers yet.</p>
+                    <small>
+                        Add a customer to get started.
+                    </small>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- TRANSACTION HISTORY -->
+
+<section class="transactions">
+
+    <div class="section-header">
+
+        <h2>Transaction History</h2>
+
+        <button onclick="displayTransactions()">
+            Refresh
+        </button>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <input
+        type="text"
+        id="transactionSearch"
+        class="search-input"
+        placeholder="Search customer or product..."
+        oninput="displayTransactions()"
+    >
+    <!-- BACKUP & RESTORE -->
+
+<section class="backup-section">
+
+    <h2>Backup & Restore</h2>
+
+    <p>
+        Protect your customers, products, sales and payment records.
+    </p>
+
+
+    <div class="backup-actions">
+
+        <button onclick="backupData()">
+            💾 Backup Data
+        </button>
+
+
+        <button
+            class="restore-btn"
+            onclick="document.getElementById('restoreFile').click()"
+        >
+            ♻️ Restore Data
+        </button>
+
+
+        <input
+            type="file"
+            id="restoreFile"
+            accept=".json"
+            onchange="restoreData(event)"
+            hidden
+        >
+
+    </div>
+
+</section>
+
+    <!-- TRANSACTION TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Customer</th>
+
+                    <th>Transaction</th>
+
+                    <th>Amount</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="transactionList">
+
+            </tbody>
+
+        </table>
+
+    </div>
+<!-- CUSTOMER STATEMENT MODAL -->
+
+<div id="statementModal" class="statement-modal">
+
+    <div class="statement-box">
+
+        <button
+            type="button"
+            class="close-statement"
+            onclick="closeStatement()">
+            ×
+        </button>
+
+        <h2>Customer Statement</h2>
+
+        <div class="customer-statement-info">
+
+            <h3 id="statementName">
+                Customer
+            </h3>
+
+            <p id="statementPhone">
+                Phone
+            </p>
+
+        </div>
+
+
+        <div class="statement-balance">
+
+            <span>Outstanding Balance</span>
+
+            <strong id="statementBalance">
+                ₦0
+            </strong>
+
+        </div>
+
+
+        <div class="statement-summary">
+
+            <div>
+                <span>Total Credit</span>
+
+                <strong id="statementCredit">
+                    ₦0
+                </strong>
+            </div>
+
+            <div>
+                <span>Total Paid</span>
+
+                <strong id="statementPaid">
+                    ₦0
+                </strong>
+            </div>
+
+        </div>
+
+
+        <h3 class="history-title">
+            Transaction History
+        </h3>
+
+
+        <div class="statement-table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="statementTransactions">
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="print-btn"
+            onclick="printStatement()">
+            🖨️ Print Statement
+        </button>
+
+    </div>
+
+</div>
+```
+
+
+
+      
+
+</section>
+    </main>
+    <!-- JAVASCRIPT -->
+    <script src="chips.js"></script>
+    
+      
+
+       
+</div>
+
+</body>
+</html>

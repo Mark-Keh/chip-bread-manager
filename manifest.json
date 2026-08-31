@@ -1,0 +1,10 @@
+{
+    "name": "Chip & Bread Manager",
+    "short_name": "Chip & Bread",
+    "description": "Manage customers, credit sales, payments and business records.",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#1f2937",
+    "orientation": "portrait-primary"
+}
