@@ -1,10 +1,19 @@
 {
-    "name": "Chip & Bread Manager",
-    "short_name": "Chip & Bread",
-    "description": "Manage customers, credit sales, payments and business records.",
-    "start_url": "./index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#1f2937",
-    "orientation": "portrait-primary"
+  "name": "Chip & Bread Manager",
+  "short_name": "Chip & Bread",
+  "description": "Manage customers, credit sales, payments and business records.",
+  "start_url": "/chip-bread-manager/index.html",
+  "id": "/chip-bread-manager/index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/chip-bread-manager/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
